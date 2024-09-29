@@ -71,7 +71,3 @@ class TestMusic163:
             self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, link))).click()
             time.sleep(2)
 
-    def test_music163(self):
-        self.test_login()
-        self.test_verify()
-        self.test_navigate()
