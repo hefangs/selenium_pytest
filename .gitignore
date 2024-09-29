@@ -8,3 +8,8 @@ out
 gen
 .idea
 .DS_Store
+logs/
+temp
+allure-report
+testcases/__pycache__/
+__pycache__/
