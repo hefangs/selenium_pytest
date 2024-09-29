@@ -3,24 +3,18 @@ import cv2
 import numpy as np
 import requests
 import pytest
-from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver as RemoteWebDriver
 
 
+@pytest.mark.usefixtures('my_fix')
 class TestMusic163:
-    @pytest.fixture(scope="class")
-    def setup(self):
-        self.driver = webdriver.Edge()
-        self.driver.get("https://music.163.com")
-        self.driver.maximize_window()
-        self.wait = WebDriverWait(self.driver, 10)
-        yield
-        self.driver.quit()
-
-    def login(self, setup):
+    driver: RemoteWebDriver
+    wait: WebDriverWait
+    def test_login(self):
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, 'a[data-action="login"]'))).click()
         time.sleep(2)
         self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME, '_3xIXD0Q6'))).click()
@@ -44,7 +38,7 @@ class TestMusic163:
         self.wait.until(EC.element_to_be_clickable((By.CLASS_NAME, '_3fo6oHZe'))).click()
         time.sleep(2)
 
-    def verify(self, setup):
+    def test_verify(self):
         url_s = self.driver.find_element(By.CLASS_NAME, 'yidun_jigsaw').get_attribute('src')
         url_b = self.driver.find_element(By.CLASS_NAME, 'yidun_bg-img').get_attribute('src')
         headers = {'user-agent': 'Mozilla/5.0'}
@@ -71,13 +65,13 @@ class TestMusic163:
         action.drag_and_drop_by_offset(ele, xoffset=adjusted_x, yoffset=0).perform()
         time.sleep(1)
 
-    def navigate(self, setup):
+    def test_navigate(self):
         links = ["排行榜", "歌单", "主播电台", "歌手", "新碟上架", "我的音乐", "关注"]
         for link in links:
             self.wait.until(EC.element_to_be_clickable((By.LINK_TEXT, link))).click()
             time.sleep(2)
 
-    def test_music163(self, setup):
-        self.login(setup)
-        self.verify(setup)
-        self.navigate(setup)
+    def test_music163(self):
+        self.test_login()
+        self.test_verify()
+        self.test_navigate()

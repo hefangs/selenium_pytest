@@ -2,3 +2,4 @@ selenium
 requests
 pytest
 opencv-python
+allure-pytest
